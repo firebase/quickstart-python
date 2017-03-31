@@ -85,7 +85,7 @@ def create_token_with_claims():
     # [START create_token_with_claims]
     uid = 'some-uid'
     additional_claims = {
-      "premiumAccount": True
+      'premiumAccount': True
     }
 
     custom_token = auth.create_custom_token(uid, additional_claims)
@@ -98,7 +98,7 @@ def verify_token_uid(id_token):
     default_app = firebase_admin.initialize_app(cred)
     # [START verify_token_uid]
     decoded_token = auth.verify_id_token(id_token)
-    uid = decoded_token.uid
+    uid = decoded_token['uid']
     # [END verify_token_uid]
     print(uid)
     firebase_admin.delete_app(default_app)
