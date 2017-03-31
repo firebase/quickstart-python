@@ -12,7 +12,7 @@ def initialize_sdk_with_service_account():
     import firebase_admin
     from firebase_admin import credentials
 
-    cred = credentials.Certificate('path/to/service.json')
+    cred = credentials.Certificate('path/to/serviceAccountKey.json')
     default_app = firebase_admin.initialize_app(cred)
     # [END initialize_sdk_with_service_account]
     firebase_admin.delete_app(default_app)
@@ -97,6 +97,8 @@ def verify_token_uid(id_token):
     cred = credentials.Certificate('path/to/service.json')
     default_app = firebase_admin.initialize_app(cred)
     # [START verify_token_uid]
+    # id_token comes from the client app (shown above)
+    
     decoded_token = auth.verify_id_token(id_token)
     uid = decoded_token['uid']
     # [END verify_token_uid]
