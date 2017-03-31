@@ -97,8 +97,8 @@ def verify_token_uid(id_token):
     cred = credentials.Certificate('path/to/service.json')
     default_app = firebase_admin.initialize_app(cred)
     # [START verify_token_uid]
-    customToken = auth.verify_id_token(id_token)
-    uid = customToken.uid
+    decoded_token = auth.verify_id_token(id_token)
+    uid = decoded_token.uid
     # [END verify_token_uid]
     print(uid)
     firebase_admin.delete_app(default_app)
