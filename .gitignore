@@ -1,0 +1,3 @@
+auth/lib
+auth/path
+*.pyc
