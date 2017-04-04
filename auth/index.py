@@ -74,10 +74,10 @@ def create_token_uid():
     # [START create_token_uid]
     uid = 'some-uid'
 
-    customToken = auth.create_custom_token(uid)
+    custom_token = auth.create_custom_token(uid)
     # [END create_token_uid]
     firebase_admin.delete_app(default_app)
-    return customToken
+    return custom_token
 
 def create_token_with_claims():
     cred = credentials.Certificate('path/to/service.json')
