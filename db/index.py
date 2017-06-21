@@ -186,9 +186,116 @@ def get_push_key():
     # [END push_key]
     print(post_id)
 
+def read_value():
+    # [START read_value]
+    # Get a database reference to our posts
+    ref = db.reference('server/saving-data/fireblog/posts')
 
-service_account = '/usr/local/google/home/hkj/Projects/firebase-admin-python/public/scripts/cert.json'
-database_url = 'https://admin-java-integration.firebaseio.com'
+    # Read the data at the posts reference (this is a blocking operation)
+    print(ref.get())
+    # [END read_value]
+
+def order_by_child():
+    # [START order_by_child]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_child('height').get()
+    for key, val in snapshot.items():
+        print('{0} was {1} meters tall'.format(key, val))
+    # [END order_by_child]
+
+def order_by_nested_child():
+    # [START order_by_nested_child]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_child('dimensions/height').get()
+    for key, val in snapshot.items():
+        print('{0} was {1} meters tall'.format(key, val))
+    # [END order_by_nested_child]
+
+def order_by_key():
+    # [START order_by_key]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_key().get()
+    print(snapshot)
+    # [END order_by_key]
+
+def order_by_value():
+    # [START order_by_value]
+    ref = db.reference('scores')
+    snapshot = ref.order_by_value().get()
+    for key, val in snapshot.items():
+        print('The {0} dinosaur\'s score is {1}'.format(key, val))
+    # [END order_by_value]
+
+def limit_query():
+    # [START limit_query_1]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_child('weight').limit_to_last(2).get()
+    for key in snapshot:
+        print(key)
+    # [END limit_query_1]
+
+    # [START limit_query_2]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_child('height').limit_to_first(2).get()
+    for key in snapshot:
+        print(key)
+    # [END limit_query_2]
+
+    # [START limit_query_3]
+    scores_ref = db.reference('scores')
+    snapshot = scores_ref.order_by_value().limit_to_last(3).get()
+    for key, val in snapshot.items():
+        print('The {0} dinosaur\'s score is {1}'.format(key, val))
+    # [END limit_query_3]
+
+def range_query():
+    # [START range_query_1]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_child('height').start_at(3).get()
+    for key in snapshot:
+        print(key)
+    # [END range_query_1]
+
+    # [START range_query_2]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_key().end_at('pterodactyl').get()
+    for key in snapshot:
+        print(key)
+    # [END range_query_2]
+
+    # [START range_query_3]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_key().start_at('b').end_at(u'b\uf8ff').get()
+    for key in snapshot:
+        print(key)
+    # [END range_query_3]
+
+    # [START range_query_4]
+    ref = db.reference('dinosaurs')
+    snapshot = ref.order_by_child('height').equal_to(25).get()
+    for key in snapshot:
+        print(key)
+    # [END range_query_4]
+
+def complex_query():
+    # [START complex_query]
+    ref = db.reference('dinosaurs')
+    favotire_dino_height = ref.child('stegosaurus').child('height').get()
+    query = ref.order_by_child('height').end_at(favotire_dino_height).limit_to_last(2)
+    snapshot = query.get()
+    if len(snapshot) == 2:
+        # Data is ordered by increasing height, so we want the first entry.
+        # Second entry is stegosarus.
+        for key in snapshot:
+            print('The dinosaur just shorter than the stegosaurus is {0}'.format(key))
+            return
+    else:
+        print('The stegosaurus is the shortest dino')
+    # [END complex_query]
+
+
+service_account = 'path/to/serviceAccount.json'
+database_url = 'https://databaseName.firebaseio.com'
 
 cred = credentials.Certificate(service_account)
 firebase_admin.initialize_app(cred, {
@@ -204,5 +311,14 @@ overwrite_value()
 push_value()
 push_and_set_value()
 get_push_key()
+
+read_value()
+order_by_child()
+#order_by_nested_child()
+order_by_key()
+order_by_value()
+limit_query()
+range_query()
+complex_query()
 
 firebase_admin.delete_app(firebase_admin.get_app())
