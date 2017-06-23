@@ -68,6 +68,9 @@ def authenticate_with_guest_privileges():
 
 def get_reference():
     # [START get_reference]
+    # Import database module.
+    from firebase_admin import db
+
     # Get a database reference to our blog.
     ref = db.reference('server/saving-data/fireblog')
     # [END get_reference]
@@ -188,6 +191,9 @@ def get_push_key():
 
 def read_value():
     # [START read_value]
+    # Import database module.
+    from firebase_admin import db
+
     # Get a database reference to our posts
     ref = db.reference('server/saving-data/fireblog/posts')
 
