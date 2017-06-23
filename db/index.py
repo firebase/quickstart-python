@@ -61,7 +61,7 @@ def authenticate_with_guest_privileges():
     })
 
     # The app only has access to public data as defined in the Security Rules
-    ref = db.reference('/some_resource')
+    ref = db.reference('/public_resource')
     print(ref.get())
     # [END authenticate_with_guest_privileges]
     firebase_admin.delete_app(firebase_admin.get_app())
