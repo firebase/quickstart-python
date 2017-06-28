@@ -61,13 +61,16 @@ def authenticate_with_guest_privileges():
     })
 
     # The app only has access to public data as defined in the Security Rules
-    ref = db.reference('/some_resource')
+    ref = db.reference('/public_resource')
     print(ref.get())
     # [END authenticate_with_guest_privileges]
     firebase_admin.delete_app(firebase_admin.get_app())
 
 def get_reference():
     # [START get_reference]
+    # Import database module.
+    from firebase_admin import db
+
     # Get a database reference to our blog.
     ref = db.reference('server/saving-data/fireblog')
     # [END get_reference]
@@ -188,6 +191,9 @@ def get_push_key():
 
 def read_value():
     # [START read_value]
+    # Import database module.
+    from firebase_admin import db
+
     # Get a database reference to our posts
     ref = db.reference('server/saving-data/fireblog/posts')
 
