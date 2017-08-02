@@ -105,6 +105,74 @@ def verify_token_uid(id_token):
     print(uid)
     firebase_admin.delete_app(default_app)
 
+def get_user(uid):
+    # [START get_user]
+    from firebase_admin import auth
+
+    user = auth.get_user(uid)
+    print 'Successfully fetched user data: {0}'.format(user.uid)
+    # [END get_user]
+
+def get_user_by_email():
+    email = 'user@example.com'
+    # [START get_user_by_email]
+    from firebase_admin import auth
+
+    user = auth.get_user_by_email(email)
+    print 'Successfully fetched user data: {0}'.format(user.uid)
+    # [END get_user_by_email]
+
+def get_user_by_phone_number():
+    phone = '+1 123 456 7890'
+    # [START get_user_by_phone]
+    from firebase_admin import auth
+
+    user = auth.get_user_by_phone_number(phone)
+    print 'Successfully fetched user data: {0}'.format(user.uid)
+    # [END get_user_by_phone]
+
+def create_user():
+    # [START create_user]
+    user = auth.create_user(
+        email='user@example.com',
+        email_verified=False,
+        phone_number='+11234567890',
+        password='secretPassword',
+        display_name='John Doe',
+        photo_url='http://www.example.com/12345678/photo.png',
+        disabled=False)
+    print 'Sucessfully created new user: {0}'.format(user.uid)
+    # [END create_user]
+    return user.uid
+
+def create_user_with_id():
+    # [START create_user_with_id]
+    user = auth.create_user(
+        uid='some-uid', email='user@example.com', phone_number='+11234567890')
+    print 'Sucessfully created new user: {0}'.format(user.uid)
+    # [END create_user_with_id]
+
+def update_user(uid):
+    # [START update_user]
+    user = auth.update_user(
+        uid,
+        email='user@example.com',
+        phone_number='+11234567890',
+        email_verified=True,
+        password='newPassword',
+        display_name='John Doe',
+        photo_url='http://www.example.com/12345678/photo.png',
+        disabled=True)
+    print 'Sucessfully updated user: {0}'.format(user.uid)
+    # [END update_user]
+
+def delete_user(uid):
+    # [START delete_user]
+    auth.delete_user(uid)
+    print 'Successfully deleted user'
+    # [END delete_user]
+
+
 initialize_sdk_with_service_account()
 initialize_sdk_with_application_default()
 #initialize_sdk_with_refresh_token()
@@ -113,3 +181,11 @@ access_services_nondefault()
 create_token_uid()
 token_with_claims = create_token_with_claims()
 #verify_token_uid()
+
+uid = create_user()
+create_user_with_id()
+get_user(uid)
+get_user_by_email()
+get_user_by_phone_number()
+update_user(uid)
+delete_user(uid)
