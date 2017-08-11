@@ -123,7 +123,7 @@ def get_user_by_email():
     # [END get_user_by_email]
 
 def get_user_by_phone_number():
-    phone = '+1 123 456 7890'
+    phone = '+1 555 555 0100'
     # [START get_user_by_phone]
     from firebase_admin import auth
 
@@ -136,7 +136,7 @@ def create_user():
     user = auth.create_user(
         email='user@example.com',
         email_verified=False,
-        phone_number='+11234567890',
+        phone_number='+15555550100',
         password='secretPassword',
         display_name='John Doe',
         photo_url='http://www.example.com/12345678/photo.png',
@@ -148,7 +148,7 @@ def create_user():
 def create_user_with_id():
     # [START create_user_with_id]
     user = auth.create_user(
-        uid='some-uid', email='user@example.com', phone_number='+11234567890')
+        uid='some-uid', email='user@example.com', phone_number='+15555550100')
     print 'Sucessfully created new user: {0}'.format(user.uid)
     # [END create_user_with_id]
 
@@ -157,7 +157,7 @@ def update_user(uid):
     user = auth.update_user(
         uid,
         email='user@example.com',
-        phone_number='+11234567890',
+        phone_number='+15555550100',
         email_verified=True,
         password='newPassword',
         display_name='John Doe',
