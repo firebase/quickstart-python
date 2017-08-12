@@ -195,7 +195,11 @@ def run_transaction():
         return current_value + 1 if current_value else 1
 
     upvotes_ref = db.reference('server/saving-data/fireblog/posts/-JRHTHaIs-jNPLXOQivY/upvotes')
-    upvotes_ref.transaction(increment_votes)
+    try:
+        new_vote_count = upvotes_ref.transaction(increment_votes)
+        print 'Transaction completed'
+    except db.TransactionError:
+        print 'Transaction failed to commit'
     # [END transaction]
 
 def read_value():
