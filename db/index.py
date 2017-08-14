@@ -189,6 +189,19 @@ def get_push_key():
     # [END push_key]
     print(post_id)
 
+def run_transaction():
+    # [START transaction]
+    def increment_votes(current_value):
+        return current_value + 1 if current_value else 1
+
+    upvotes_ref = db.reference('server/saving-data/fireblog/posts/-JRHTHaIs-jNPLXOQivY/upvotes')
+    try:
+        new_vote_count = upvotes_ref.transaction(increment_votes)
+        print 'Transaction completed'
+    except db.TransactionError:
+        print 'Transaction failed to commit'
+    # [END transaction]
+
 def read_value():
     # [START read_value]
     # Import database module.
@@ -317,6 +330,7 @@ overwrite_value()
 push_value()
 push_and_set_value()
 get_push_key()
+run_transaction()
 
 read_value()
 order_by_child()
