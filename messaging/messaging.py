@@ -15,8 +15,8 @@ import requests
 
 from oauth2client.service_account import ServiceAccountCredentials
 
-PROJECT_ID = 'gh-quickstarter-278bf'
-BASE_URL = 'https://fcm-staging.sandbox.googleapis.com'
+PROJECT_ID = '<YOUR-PROJECT-ID>'
+BASE_URL = 'https://fcm.googleapis.com'
 FCM_ENDPOINT = 'v1/projects/' + PROJECT_ID + '/messages:send'
 FCM_URL = BASE_URL + '/' + FCM_ENDPOINT
 FCM_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging'
