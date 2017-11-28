@@ -174,11 +174,15 @@ def delete_user(uid):
 
 def set_custom_user_claims(uid):
     # [START set_custom_user_claims]
+    # Set admin privilege on the user corresponding to uid.
     auth.set_custom_user_claims(uid, {'admin': True})
+    # The new custom claims will propagate to the user's ID token the
+    # next time a new one is issued.
     # [END set_custom_user_claims]
 
     id_token = 'id_token'
     # [START verify_custom_claims]
+    # Verify the ID token first.
     claims = auth.verify_id_token(id_token)
     if claims['admin'] is True:
         # Allow access to requested admin resource.
@@ -186,8 +190,10 @@ def set_custom_user_claims(uid):
     # [END verify_custom_claims]
 
     # [START read_custom_user_claims]
+    # Lookup the user associated with the specified uid.
     user = auth.get_user(uid)
-    print user.custom_claims
+    # The claims can be accessed on the user record.
+    print user.custom_claims.get('admin')
     # [END read_custom_user_claims]
 
 def set_custom_user_claims_script():
