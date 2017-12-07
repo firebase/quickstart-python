@@ -172,6 +172,69 @@ def delete_user(uid):
     print 'Successfully deleted user'
     # [END delete_user]
 
+def set_custom_user_claims(uid):
+    # [START set_custom_user_claims]
+    # Set admin privilege on the user corresponding to uid.
+    auth.set_custom_user_claims(uid, {'admin': True})
+    # The new custom claims will propagate to the user's ID token the
+    # next time a new one is issued.
+    # [END set_custom_user_claims]
+
+    id_token = 'id_token'
+    # [START verify_custom_claims]
+    # Verify the ID token first.
+    claims = auth.verify_id_token(id_token)
+    if claims['admin'] is True:
+        # Allow access to requested admin resource.
+        pass
+    # [END verify_custom_claims]
+
+    # [START read_custom_user_claims]
+    # Lookup the user associated with the specified uid.
+    user = auth.get_user(uid)
+    # The claims can be accessed on the user record.
+    print user.custom_claims.get('admin')
+    # [END read_custom_user_claims]
+
+def set_custom_user_claims_script():
+    # [START set_custom_user_claims_script]
+    user = auth.get_user_by_email('user@admin.example.com')
+    # Confirm user is verified
+    if user.email_verified:
+        # Add custom claims for additional privileges.
+        # This will be picked up by the user on token refresh or next sign in on new device.
+        auth.set_custom_user_claims(user.uid, {
+            'admin': True
+        })
+    # [END set_custom_user_claims_script]
+
+def set_custom_user_claims_incremental():
+    # [START set_custom_user_claims_incremental]
+    user = auth.get_user_by_email('user@admin.example.com')
+    # Add incremental custom claim without overwriting existing claims.
+    current_custom_claims = user.custom_claims
+    if current_custom_claims.get('admin'):
+        # Add level.
+        current_custom_claims['accessLevel'] = 10
+        # Add custom claims for additional privileges.
+        auth.set_custom_user_claims(user.uid, current_custom_claims)
+    # [END set_custom_user_claims_incremental]
+
+def list_all_users():
+    # [START list_all_users]
+    # Start listing users from the beginning, 1000 at a time.
+    page = auth.list_users()
+    while page:
+        for user in page.users:
+            print 'User: ' + user.uid
+        # Get next batch of users.
+        page = page.get_next_page()
+
+    # Iterate through all users. This will still retrieve users in batches,
+    # buffering no more than 1000 users in memory at a time.
+    for user in auth.list_users().iterate_all():
+        print 'User: ' + user.uid
+    # [END list_all_users]
 
 initialize_sdk_with_service_account()
 initialize_sdk_with_application_default()
@@ -188,4 +251,6 @@ get_user(uid)
 get_user_by_email()
 get_user_by_phone_number()
 update_user(uid)
+set_custom_user_claims(uid)
+list_all_users()
 delete_user(uid)
