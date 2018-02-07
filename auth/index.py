@@ -109,7 +109,6 @@ def verify_token_uid_check_revoke(id_token):
     cred = credentials.Certificate('path/to/service.json')
     default_app = firebase_admin.initialize_app(cred)
     # [START verify_token_id_check_revoked]
-    # id_token comes from the client app (shown above)
     try:
         decoded_token = auth.verify_id_token(id_token,
                                              check_revoked=True)
