@@ -117,7 +117,7 @@ def verify_token_uid_check_revoke(id_token):
         # Token is valid and not revoked.
         uid = decoded_token['uid']
     except auth.AuthError as exc:
-        if exc.value.code == auth._ID_TOKEN_REVOKED:
+        if exc.value.code == "ID_TOKEN_REVOKED":
             # When this occurs, inform the user to reauthenticate or signOut().
             pass
     # [END verify_token_id_check_revoked]
