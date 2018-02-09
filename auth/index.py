@@ -134,6 +134,7 @@ def revoke_refresh_token_uid(id_token):
     revocation_second = user.tokens_valid_after_timestamp / 1000
     # [END revoke_tokens]
     # [START revoke_tokens_in_db]
+    # After revoking tokens, follow up with:
     user = auth.get_user(uid)
     # Convert to seconds as the auth_time in the token claims is in seconds.           
     revocation_second = user.tokens_valid_after_timestamp / 1000
