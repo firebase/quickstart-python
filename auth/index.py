@@ -134,7 +134,6 @@ def revoke_refresh_token_uid(id_token):
     revocation_second = user.tokens_valid_after_timestamp / 1000
     # [END revoke_tokens]
     # [START revoke_tokens_in_db]
-    # After revoking refresh tokens, and retrieving the revocation time:
     metadata_ref = firebase_admin.db.reference("metadata/" + uid)
     metadata_ref.set({'revokeTime': revocation_second})
     # [END revoke_tokens_in_db]
