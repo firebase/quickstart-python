@@ -133,10 +133,10 @@ def revoke_refresh_token_uid(id_token):
     # Convert to seconds as the auth_time in the token claims is in seconds.           
     revocation_second = user.tokens_valid_after_timestamp / 1000
     # [END revoke_tokens]
-    # [START revoke_tokens_in_db]
+    # [START save_revocation_in_db]
     metadata_ref = firebase_admin.db.reference("metadata/" + uid)
     metadata_ref.set({'revokeTime': revocation_second})
-    # [END revoke_tokens_in_db]
+    # [END save_revocation_in_db]
     print(uid)
     firebase_admin.delete_app(default_app)
 
