@@ -105,6 +105,41 @@ def verify_token_uid(id_token):
     print(uid)
     firebase_admin.delete_app(default_app)
 
+def verify_token_uid_check_revoke(id_token):
+    cred = credentials.Certificate('path/to/service.json')
+    default_app = firebase_admin.initialize_app(cred)
+    # [START verify_token_id_check_revoked]
+    try:
+        # Verify the ID token while checking if the token is revoked by 
+        # passing check_revoked=True.
+        decoded_token = auth.verify_id_token(id_token, check_revoked=True)
+        # Token is valid and not revoked.
+        uid = decoded_token['uid']
+    except auth.AuthError as exc:
+        if exc.value.code == 'ID_TOKEN_REVOKED':
+            # When this occurs, inform the user to reauthenticate or signOut().
+            pass
+    # [END verify_token_id_check_revoked]
+    firebase_admin.delete_app(default_app)
+    return uid
+
+def revoke_refresh_token_uid(id_token):
+    cred = credentials.Certificate('path/to/service.json')
+    default_app = firebase_admin.initialize_app(cred)
+    # [START revoke_tokens]
+    # Revoke tokens on the backend.
+    auth.revoke_refresh_tokens(uid)
+    user = auth.get_user(uid)
+    # Convert to seconds as the auth_time in the token claims is in seconds.           
+    revocation_second = user.tokens_valid_after_timestamp / 1000
+    # [END revoke_tokens]
+    # [START save_revocation_in_db]
+    metadata_ref = firebase_admin.db.reference("metadata/" + uid)
+    metadata_ref.set({'revokeTime': revocation_second})
+    # [END save_revocation_in_db]
+    print(uid)
+    firebase_admin.delete_app(default_app)
+
 def get_user(uid):
     # [START get_user]
     from firebase_admin import auth
