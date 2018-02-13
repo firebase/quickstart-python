@@ -116,7 +116,7 @@ def verify_token_uid_check_revoke(id_token):
         # Token is valid and not revoked.
         uid = decoded_token['uid']
     except auth.AuthError as exc:
-        if exc.value.code == 'ID_TOKEN_REVOKED':
+        if exc.code == 'ID_TOKEN_REVOKED':
             # When this occurs, inform the user to reauthenticate or signOut().
             pass
     # [END verify_token_id_check_revoked]
@@ -132,6 +132,7 @@ def revoke_refresh_token_uid(id_token):
     user = auth.get_user(uid)
     # Convert to seconds as the auth_time in the token claims is in seconds.           
     revocation_second = user.tokens_valid_after_timestamp / 1000
+    print 'Tokens revoked at: {0}'.format(revocation_second)
     # [END revoke_tokens]
     # [START save_revocation_in_db]
     metadata_ref = firebase_admin.db.reference("metadata/" + uid)
