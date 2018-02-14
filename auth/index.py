@@ -117,7 +117,10 @@ def verify_token_uid_check_revoke(id_token):
         uid = decoded_token['uid']
     except auth.AuthError as exc:
         if exc.code == 'ID_TOKEN_REVOKED':
-            # When this occurs, inform the user to reauthenticate or signOut().
+            # Token revoked, inform the user to reauthenticate or signOut().
+            pass
+        else:
+            # Token is invalid
             pass
     # [END verify_token_id_check_revoked]
     firebase_admin.delete_app(default_app)
