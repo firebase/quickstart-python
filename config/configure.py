@@ -1,5 +1,6 @@
 import argparse
 import requests
+import io
 
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -33,8 +34,8 @@ def _get():
   resp = requests.get(REMOTE_CONFIG_URL, headers=headers)
 
   if resp.status_code == 200:
-    with open('config.json', 'w') as f:
-      f.write(resp.text)
+    with io.open('config.json', 'wb') as f:
+      f.write(resp.text.encode('utf8'))
 
     print('Retrieved template has been written to config.json')
     print('ETag from server: {}'.format(resp.headers['ETag']))
@@ -50,14 +51,14 @@ def _publish(etag):
     etag: ETag for safe (avoid race conditions) template updates.
         * can be used to force template replacement.
   """
-  with open('config.json', 'r') as f:
+  with open('config.json', 'r', encoding="utf-8") as f:
     content = f.read()
   headers = {
     'Authorization': 'Bearer ' + _get_access_token(),
     'Content-Type': 'application/json; UTF-8',
     'If-Match': etag
   }
-  resp = requests.put(REMOTE_CONFIG_URL, data=content, headers=headers)
+  resp = requests.put(REMOTE_CONFIG_URL, data=content.encode('utf-8'), headers=headers)
   if resp.status_code == 200:
     print('Template has been published.')
     print('ETag from server: {}'.format(resp.headers['ETag']))
