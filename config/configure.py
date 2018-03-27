@@ -35,7 +35,7 @@ def _get():
 
   if resp.status_code == 200:
     with io.open('config.json', 'wb') as f:
-      f.write(resp.text.encode('utf8'))
+        f.write(resp.text.encode('utf-8'))
 
     print('Retrieved template has been written to config.json')
     print('ETag from server: {}'.format(resp.headers['ETag']))
@@ -51,7 +51,7 @@ def _publish(etag):
     etag: ETag for safe (avoid race conditions) template updates.
         * can be used to force template replacement.
   """
-  with open('config.json', 'r', encoding="utf-8") as f:
+  with open('config.json', 'r', encoding='utf-8') as f:
     content = f.read()
   headers = {
     'Authorization': 'Bearer ' + _get_access_token(),
