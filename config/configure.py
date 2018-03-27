@@ -35,7 +35,7 @@ def _get():
 
   if resp.status_code == 200:
     with io.open('config.json', 'wb') as f:
-        f.write(resp.text.encode('utf-8'))
+      f.write(resp.text.encode('utf-8'))
 
     print('Retrieved template has been written to config.json')
     print('ETag from server: {}'.format(resp.headers['ETag']))
