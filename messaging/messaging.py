@@ -19,7 +19,7 @@ PROJECT_ID = '<YOUR-PROJECT-ID>'
 BASE_URL = 'https://fcm.googleapis.com'
 FCM_ENDPOINT = 'v1/projects/' + PROJECT_ID + '/messages:send'
 FCM_URL = BASE_URL + '/' + FCM_ENDPOINT
-FCM_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging'
+SCOPES = ['https://www.googleapis.com/auth/firebase.messaging']
 
 # [START retrieve_access_token]
 def _get_access_token():
@@ -28,7 +28,7 @@ def _get_access_token():
   :return: Access token.
   """
   credentials = ServiceAccountCredentials.from_json_keyfile_name(
-      'service-account.json', FCM_SCOPE)
+      'service-account.json', SCOPES)
   access_token_info = credentials.get_access_token()
   return access_token_info.access_token
 # [END retrieve_access_token]

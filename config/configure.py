@@ -9,18 +9,19 @@ PROJECT_ID = '<PROJECT_ID>'
 BASE_URL = 'https://firebaseremoteconfig.googleapis.com'
 REMOTE_CONFIG_ENDPOINT = 'v1/projects/' + PROJECT_ID + '/remoteConfig'
 REMOTE_CONFIG_URL = BASE_URL + '/' + REMOTE_CONFIG_ENDPOINT
-REMOTE_CONFIG_SCOPE = 'https://www.googleapis.com/auth/firebase.remoteconfig'
+SCOPES = ['https://www.googleapis.com/auth/firebase.remoteconfig']
 
-
+# [START retrieve_access_token]
 def _get_access_token():
   """Retrieve a valid access token that can be used to authorize requests.
 
   :return: Access token.
   """
   credentials = ServiceAccountCredentials.from_json_keyfile_name(
-      'service-account.json', REMOTE_CONFIG_SCOPE)
+      'service-account.json', SCOPES)
   access_token_info = credentials.get_access_token()
   return access_token_info.access_token
+# [END retrieve_access_token]
 
 def _get():
   """Retrieve the current Firebase Remote Config template from server.
