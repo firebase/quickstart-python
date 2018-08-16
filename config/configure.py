@@ -5,7 +5,7 @@ import io
 from oauth2client.service_account import ServiceAccountCredentials
 
 
-PROJECT_ID = '<PROJECT_ID>'
+PROJECT_ID = 'PROJECT_ID'
 BASE_URL = 'https://firebaseremoteconfig.googleapis.com'
 REMOTE_CONFIG_ENDPOINT = 'v1/projects/' + PROJECT_ID + '/remoteConfig'
 REMOTE_CONFIG_URL = BASE_URL + '/' + REMOTE_CONFIG_ENDPOINT
@@ -44,6 +44,41 @@ def _get():
     print('Unable to get template')
     print(resp.text)
 
+def _listVersions():
+  """Print the last 5 Remote Config version's metadata."""
+  headers = {
+    'Authorization': 'Bearer ' + _get_access_token()
+  }
+  resp = requests.get(REMOTE_CONFIG_URL + ':listVersions?pageSize=5', headers=headers)
+
+  if resp.status_code == 200:
+    print('Versions:')
+    print(resp.text)
+  else:
+    print('Request to print template versions failed.')
+    print(resp.text)
+
+def _rollback(version):
+  """Roll back to an available version of Firebase Remote Config template.
+
+  :param version: The version of the template to roll back to.
+  """
+  headers = {
+    'Authorization': 'Bearer ' + _get_access_token()
+  }
+
+  json = {
+    "version_number": version
+  }
+  resp = requests.post(REMOTE_CONFIG_URL + ':rollback', headers=headers, json=json)
+
+  if resp.status_code == 200:
+    print('Rolled back to version: ' + version)
+    print(resp.text)
+    print('ETag from server: {}'.format(resp.headers['ETag']))
+  else:
+    print('Request to roll back to version ' + version + ' failed.')
+    print(resp.text)
 
 def _publish(etag):
   """Publish local template to Firebase server.
@@ -72,16 +107,23 @@ def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('--action')
   parser.add_argument('--etag')
+  parser.add_argument('--version')
   args = parser.parse_args()
 
   if args.action and args.action == 'get':
     _get()
   elif args.action and args.action == 'publish' and args.etag:
     _publish(args.etag)
+  elif args.action and args.action == 'versions':
+    _listVersions()
+  elif args.action and args.action == 'rollback' and args.version:
+    _rollback(args.version)
   else:
     print('''Invalid command. Please use one of the following commands:
 python configure.py --action=get
-python configure.py --action=publish --etag=<LATEST_ETAG>''')
+python configure.py --action=publish --etag=<LATEST_ETAG>
+python configure.py --action=versions
+python configure.py --action=rollback --version=<TEMPLATE_VERSION_NUMBER>''')
 
 
 
