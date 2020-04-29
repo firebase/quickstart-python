@@ -3,6 +3,10 @@
 This sample script shows how you can use the Firebase Admin SDK to manage your
 Firebase-hosted ML models.
 
+Also see the [Firebase ML API Tutorial Colab/Jupyter notebook][colab].
+
+[colab]: https://colab.research.google.com/github/firebase/quickstart-python/blob/master/machine-learning/Firebase_ML_API_Tutorial.ipynb
+
 ## Setup
 
 1.  Install the Admin SDK (probably in a virtual environment):
