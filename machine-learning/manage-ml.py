@@ -62,6 +62,27 @@ def print_models(models, headers=True):
   print(table)
 
 
+def get_model_info(model_id):
+  """Get model details."""
+  model = ml.get_model(model_id)
+  created = datetime.fromtimestamp(model.create_time / 1000, timezone.utc)
+  updated = datetime.fromtimestamp(model.update_time / 1000, timezone.utc)
+  table = BeautifulTable()
+  table.columns.append(['Name:', 'ID:', 'Tags:', 'Published:', 'ETag:',
+                        'SHA256:', 'Created:', 'Updated:'])
+  table.columns.append([model.display_name,
+                        model.model_id,
+                        ', '.join(model.tags) if model.tags else '',
+                        'Yes' if model.published else 'No',
+                        model.etag,
+                        model.model_hash,
+                        created.isoformat(' ', timespec='seconds'),
+                        updated.isoformat(' ', timespec='seconds')])
+  table.set_style(BeautifulTable.STYLE_COMPACT)
+  table.columns.alignment = BeautifulTable.ALIGN_LEFT
+  print(table)
+
+
 def update_model(model_id, model_file=None, name=None,
                  new_tags=None, remove_tags=None):
   """Update one of the project's models."""
@@ -117,6 +138,11 @@ def main():
       help='''filter expression to limit results (see:
               https://firebase.google.com/docs/ml-kit/manage-hosted-models#list_your_projects_models)''')
 
+  info_parser = subparsers.add_parser(
+      'info', help='')
+  info_parser.add_argument(
+      'model_id', type=valid_id, help='the ID of the model you want to view')
+
   update_parser = subparsers.add_parser(
       'update', help='update one of your project\'s models')
   update_parser.add_argument(
@@ -144,6 +170,8 @@ def main():
       upload_model(args.model_file, args.name, tags)
     elif args.command == 'list':
       list_models(args.filter)
+    elif args.command == 'info':
+      get_model_info(args.model_id)
     elif args.command == 'update':
       new_tags = args.new_tags.split(',') if args.new_tags is not None else None
       remove_tags = (
