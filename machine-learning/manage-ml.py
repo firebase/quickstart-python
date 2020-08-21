@@ -2,7 +2,10 @@
 """Firebase Admin SDK ML quickstart example."""
 
 import argparse
+from datetime import datetime
+from datetime import timezone
 
+from beautifultable import BeautifulTable
 import firebase_admin
 from firebase_admin import ml
 
@@ -36,17 +39,27 @@ def upload_model(model_file, name, tags=None):
   ml.publish_model(new_model.model_id)
 
   print('Model uploaded and published:')
-  tags = ', '.join(new_model.tags) if new_model.tags is not None else ''
-  print('{:<20}{:<10} {}'.format(new_model.display_name, new_model.model_id,
-                                 tags))
+  print_models([new_model], headers=False)
 
 
 def list_models(filter_exp=''):
   """List the models in the project."""
   models = ml.list_models(list_filter=filter_exp).iterate_all()
+  print_models(models)
+
+
+def print_models(models, headers=True):
+  """Prettyprint a list of models."""
+  table = BeautifulTable()
+  if headers:
+    table.columns.header = ['Name', 'ID', 'Tags']
   for model in models:
     tags = ', '.join(model.tags) if model.tags is not None else ''
-    print('{:<20}{:<10} {}'.format(model.display_name, model.model_id, tags))
+    table.rows.append([model.display_name, model.model_id, tags])
+  table.set_style(BeautifulTable.STYLE_COMPACT)
+  table.columns.header.alignment = BeautifulTable.ALIGN_CENTER
+  table.columns.alignment = BeautifulTable.ALIGN_LEFT
+  print(table)
 
 
 def update_model(model_id, model_file=None, name=None,

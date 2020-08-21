@@ -9,11 +9,12 @@ Also see the [Firebase ML API Tutorial Colab/Jupyter notebook][colab].
 
 ## Setup
 
-1.  Install the Admin SDK (probably in a virtual environment):
+1.  Install the Admin SDK and other dependencies (probably in a virtual
+    environment):
 
     ```
     $ pip install -U pip setuptools
-    $ pip install firebase_admin
+    $ pip install -r requirements.txt
     ```
 
 2.  Clone the quickstart repository and change to the `machine-learning`

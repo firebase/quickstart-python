@@ -1,0 +1,2 @@
+beautifultable~=1.0.0
+firebase-admin~=4.3.0
