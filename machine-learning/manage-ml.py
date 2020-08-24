@@ -11,8 +11,8 @@ from firebase_admin import ml
 
 
 # TODO(user): Configure for your project. (See README.md.)
-SERVICE_ACCOUNT_KEY = '/path/to/your/service_account_key.json'
-STORAGE_BUCKET = 'your-storage-bucket'
+SERVICE_ACCOUNT_KEY = '/Users/kevincheung/tmp/quickstart-python/machine-learning/ml-test-dd433-firebase-adminsdk-j42mc-2f3398ab12.json'
+STORAGE_BUCKET = 'ml-test-dd433.appspot.com'
 
 credentials = firebase_admin.credentials.Certificate(SERVICE_ACCOUNT_KEY)
 firebase_admin.initialize_app(credentials, options={
@@ -36,6 +36,25 @@ def upload_model(model_file, name, tags=None):
 
   # Add the model to your Firebase project and publish it
   new_model = ml.create_model(model)
+  ml.publish_model(new_model.model_id)
+
+  print('Model uploaded and published:')
+  print_models([new_model], headers=False)
+
+
+def add_automl_model(model_ref, name, tags=None):
+  """Add an AutoML tflite model file to the project and publish it."""
+  # Create the model object
+  model_source = ml.TFLiteAutoMlSource(model_ref)
+  model = ml.Model(
+      display_name=name,
+      model_format=ml.TFLiteFormat(model_source=model_source))
+  if tags is not None:
+    model.tags = tags
+
+  # Add the model to your Firebase project and publish it
+  new_model = ml.create_model(model)
+  new_model.wait_for_unlocked()
   ml.publish_model(new_model.model_id)
 
   print('Model uploaded and published:')
@@ -123,11 +142,17 @@ def main():
       dest='command', required=True, metavar='command')
 
   new_parser = subparsers.add_parser(
-      'new', help='upload a tflite model to your project')
-  new_parser.add_argument(
-      'model_file', type=str, help='path to the tflite file')
+      'new', help='upload a tflite model file or AutoML model reference to'
+                  ' your project')
   new_parser.add_argument(
       'name', type=str, help='display name for the new model')
+  new_source_group = new_parser.add_mutually_exclusive_group(required=True)
+  new_source_group.add_argument(
+      '-f', '--file', type=str, help='path to the tflite file')
+  new_source_group.add_argument(
+      '-a', '--automl', type=str, help='AutoML model reference (e.g. projects/'
+                                       '12345678/locations/us-central1/models/'
+                                       'ICN1234567890)')
   new_parser.add_argument(
       '-t', '--tags', type=str, help='comma-separated list of tags')
 
@@ -165,9 +190,12 @@ def main():
 
   args = main_parser.parse_args()
   try:
-    if args.command == 'new':
+    if args.command == 'new' and args.file is not None:
       tags = args.tags.split(',') if args.tags is not None else None
-      upload_model(args.model_file, args.name, tags)
+      upload_model(args.file.strip(), args.name.strip(), tags)
+    if args.command == 'new' and args.automl is not None:
+      tags = args.tags.split(',') if args.tags is not None else None
+      add_automl_model(args.automl.strip(), args.name.strip(), tags)
     elif args.command == 'list':
       list_models(args.filter)
     elif args.command == 'info':
