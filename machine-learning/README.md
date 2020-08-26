@@ -61,7 +61,6 @@ $ ./manage-ml.py list
 ---------------------- ---------- ------------------
  fish_recognizer        12990533   vision
  barcode_scanner        12990544   vision
- sentiment_recognizer   12990566   natural_language
 $ ./manage-ml.py new yak_detector -f model.tflite -t vision,experimental
 Uploading to Cloud Storage...
 Model uploaded and published:
@@ -74,7 +73,6 @@ $ ./manage-ml.py list
 ---------------------- ---------- ----------------------
  fish_recognizer        12990533   vision
  barcode_scanner        12990544   vision
- sentiment_recognizer   12990566   natural_language
  yak_detector           12990577   experimental, vision
  flower_classifier      12990597
 $ ./manage-ml.py update 12990577 --remove_tags experimental
@@ -83,7 +81,6 @@ $ ./manage-ml.py list
          Name              ID            Tags
 ---------------------- ---------- ------------------
  fish_recognizer        12990533   vision
- sentiment_recognizer   12990566   natural_language
  yak_detector           12990577   vision
  flower_classifier      12990597
 $
