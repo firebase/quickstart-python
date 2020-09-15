@@ -57,18 +57,31 @@ Also see the [Firebase ML API Tutorial Colab/Jupyter notebook][colab].
 
 ```
 $ ./manage-ml.py list
-fish_detector    8716935   vision
-barcode_scanner  8716959   vision
-smart_reply      8716981   natural_language
-$ ./manage-ml.py new ~/yak.tflite yak_detector --tags vision,experimental
-Uploading model to Cloud Storage...
+         Name              ID            Tags
+---------------------- ---------- ------------------
+ fish_recognizer        12990533   vision
+ barcode_scanner        12990544   vision
+$ ./manage-ml.py new yak_detector -f model.tflite -t vision,experimental
+Uploading to Cloud Storage...
 Model uploaded and published:
-yak_detector     8717019   experimental, vision
-$ ./manage-ml.py update 8717019 --remove_tags experimental
-$ ./manage-ml.py delete 8716959
+ yak_detector   12990577   experimental, vision
+$ ./manage-ml.py new flower_classifier -a projects/12345/locations/us-central1/models/ICN12345
+Model uploaded and published:
+ flower_classifier   12990597
 $ ./manage-ml.py list
-fish_detector    8716935   vision
-smart_reply      8716981   natural_language
-yak_detector     8717019   vision
+         Name              ID              Tags
+---------------------- ---------- ----------------------
+ fish_recognizer        12990533   vision
+ barcode_scanner        12990544   vision
+ yak_detector           12990577   experimental, vision
+ flower_classifier      12990597
+$ ./manage-ml.py update 12990577 --remove_tags experimental
+$ ./manage-ml.py delete 12990544
+$ ./manage-ml.py list
+         Name              ID            Tags
+---------------------- ---------- ------------------
+ fish_recognizer        12990533   vision
+ yak_detector           12990577   vision
+ flower_classifier      12990597
 $
 ```
