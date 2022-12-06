@@ -12,8 +12,9 @@ customizations. For example, a badge is added to messages that are sent to iOS d
 import argparse
 import json
 import requests
+import google.auth.transport.requests
 
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 
 PROJECT_ID = '<YOUR-PROJECT-ID>'
 BASE_URL = 'https://fcm.googleapis.com'
@@ -27,10 +28,12 @@ def _get_access_token():
 
   :return: Access token.
   """
-  credentials = ServiceAccountCredentials.from_json_keyfile_name(
-      'service-account.json', SCOPES)
+  credentials = service_account.Credentials.from_service_account_file(
+    'service-account.json', scopes=SCOPES)
+  request = google.auth.transport.requests.Request()
   access_token_info = credentials.get_access_token()
-  return access_token_info.access_token
+  credentials.refresh(request)
+  return credentials.token
 # [END retrieve_access_token]
 
 def _send_fcm_message(fcm_message):
