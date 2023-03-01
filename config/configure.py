@@ -15,10 +15,13 @@ SCOPES = ['https://www.googleapis.com/auth/firebase.remoteconfig']
 def _get_access_token():
   """Retrieve a valid access token that can be used to authorize requests.
 
+  This method must be called in either a trusted Google environment like GCP or if running
+  elsewhere the GOOGLE_APPLICATION_CREDENTIALS environment variable must be set to the path
+  of the service account credentials file.
+
   :return: Access token.
   """
-  credentials = ServiceAccountCredentials.from_json_keyfile_name(
-      'service-account.json', SCOPES)
+  credentials = ServiceAccountCredentials.get_application_default().create_scoped(scopes=SCOPES)
   access_token_info = credentials.get_access_token()
   return access_token_info.access_token
 # [END retrieve_access_token]
